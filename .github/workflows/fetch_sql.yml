@@ -20,7 +20,7 @@ jobs:
       run: |
         # Find the recently modified .sql files
         COMMIT_HASH=${{ github.sha }}
-        MODIFIED_SQL_FILES=$(git diff-tree --no-commit-id --name-only -r $COMMIT_HASH | grep '.sql' || echo "")
+        $MODIFIED_SQL_FILES=$(git diff-tree --no-commit-id --name-only -r $COMMIT_HASH | grep '.sql' || echo "")
         echo "SQL files modified: $MODIFIED_SQL_FILES"
         echo "::set-output name=sql_files::$MODIFIED_SQL_FILES"
     # - name: Fetch modified SQL files
