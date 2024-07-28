@@ -1,0 +1,66 @@
+name: Execute SQL on Snowflake
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  execute-sql:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: List files in the repository
+      run: ls -R
+
+    - name: Fetch modified SQL files
+      id: fetch_sql
+      run: |
+        # Find the recently modified .sql files
+        MODIFIED_SQL_FILES=$(git diff-tree --no-commit-id --name-only -r ${{ github.sha }} | grep '.sql')
+        echo "SQL files modified: $MODIFIED_SQL_FILES"
+        echo "::set-output name=sql_files::$MODIFIED_SQL_FILES"
+        
+    - name: Display the modified SQL files
+      run: echo "SQL files to be executed: ${{ steps.fetch_sql.outputs.sql_files }}"
+
+    # - name: Execute SQL on Snowflake
+    #   env:
+    #     SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+    #     SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
+    #     SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
+    #     SNOWFLAKE_DATABASE: ${{ secrets.SNOWFLAKE_DATABASE }}
+    #     SNOWFLAKE_SCHEMA: ${{ secrets.SNOWFLAKE_SCHEMA }}
+    #   run: |
+    #     pip install snowflake-connector-python
+        
+    #     python -c "
+# import os
+# import snowflake.connector
+
+# # Connect to Snowflake
+# conn = snowflake.connector.connect(
+#     user=os.environ['SNOWFLAKE_USER'],
+#     password=os.environ['SNOWFLAKE_PASSWORD'],
+#     account=os.environ['SNOWFLAKE_ACCOUNT']
+# )
+
+# # Get the modified SQL files
+# sql_files = '${{ steps.fetch_sql.outputs.sql_files }}'.split()
+# print(f'Executing SQL files: {sql_files}')
+
+# # Execute each SQL file
+# for sql_file in sql_files:
+#     with open(sql_file, 'r') as file:
+#         sql_commands = file.read()
+
+#     with conn.cursor() as cursor:
+#         for command in sql_commands.split(';'):
+#             if command.strip():
+#                 cursor.execute(command)
+
+# conn.close()
+#         "
