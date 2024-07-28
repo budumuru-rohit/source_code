@@ -25,7 +25,8 @@ jobs:
         echo "::set-output name=sql_files::$MODIFIED_SQL_FILES"
         
     - name: Display the modified SQL files
-      run: echo "SQL files to be executed: ${{ steps.fetch_sql.outputs.sql_files }}"
+      run: | 
+       echo "SQL files to be executed: ${{ steps.fetch_sql.outputs.sql_files }}"
 
     # - name: Execute SQL on Snowflake
     #   env:
