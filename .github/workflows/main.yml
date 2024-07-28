@@ -1,0 +1,29 @@
+name: Fetch Modified Files
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  fetch-modified-files:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+      # This step uses the actions/checkout@v2 action to check out the code in the repository.
+
+    - name: Get the list of modified files
+      id: modified_files
+      run: |
+        git fetch origin main
+        MODIFIED_FILES=$(git diff --name-only HEAD^1 HEAD)
+        echo "::set-output name=files::$MODIFIED_FILES"
+      # This step runs a shell script to get the list of modified files between the last commit and the previous commit.
+      # The list of modified files is saved as an output variable called "files".
+
+    - name: Display modified files
+      run: |
+        echo "Modified files: ${{ steps.modified_files.outputs.files }}"
+      # This step simply echoes the list of modified files to the log.
