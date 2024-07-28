@@ -1,6 +1,7 @@
 create or replace view view1
 (
   student,
-  teacher
+  teacher,
+  class
 )
 select * from table1;
